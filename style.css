@@ -1,0 +1,29 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+#map {
+	height: calc(100vh - 82px);
+}
+
+.button {
+	display: inline-block;
+	background-color: #4caf50;
+	color: white;
+	text-decoration: none;
+	/* border: none; */
+	padding: 12px 24px;
+	font-size: 16px;
+	border-radius: 8px;
+	/* cursor: pointer; */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	transition: background-color 0.3s ease, transform 0.2s ease;
+	margin: 10px 0;
+}
+
+.button:hover {
+	background-color: #45a049;
+	transform: scale(1.05);
+}

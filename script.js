@@ -6,28 +6,55 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 	attribution: "&copy; OpenStreetMap contributors",
 }).addTo(map);
 
-// Lấy vị trí hiện tại của người dùng
+// Kiểm tra Safari
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+// Định vị người dùng
 if (navigator.geolocation) {
 	navigator.geolocation.getCurrentPosition(
 		function (position) {
-			const lat = position.coords.latitude; // Vĩ độ
-			const lng = position.coords.longitude; // Kinh độ
+			const lat = position.coords.latitude;
+			const lng = position.coords.longitude;
 
-			// Thêm marker tại vị trí hiện tại
-			const marker = L.marker([lat, lng])
+			L.marker([lat, lng])
 				.addTo(map)
-				.bindPopup("Bạn đang ở đây nè hjhj")
+				.bindPopup("📍 Bạn đang ở đây")
 				.openPopup();
 
-			// Di chuyển bản đồ đến vị trí người dùng
 			map.setView([lat, lng], 15);
 		},
 		function (error) {
-			alert("Không thể lấy vị trí: " + error.message);
+			let msg = "⚠️ Không thể lấy vị trí: ";
+			switch (error.code) {
+				case error.PERMISSION_DENIED:
+					msg += "Bạn đã từ chối chia sẻ vị trí.";
+					break;
+				case error.POSITION_UNAVAILABLE:
+					msg += "Vị trí không khả dụng.";
+					break;
+				case error.TIMEOUT:
+					msg += "Hết thời gian lấy vị trí.";
+					break;
+				default:
+					msg += error.message;
+			}
+
+			if (isSafari) {
+				msg +=
+					"<br><br>👉 Trên Safari iPhone: Vào <b>Cài đặt > Safari > Vị trí > Cho phép</b>";
+			}
+
+			const div = document.createElement("div");
+			div.className = "warning";
+			div.innerHTML = msg;
+			document.body.appendChild(div);
 		}
 	);
 } else {
-	alert("Trình duyệt không hỗ trợ định vị.");
+	const div = document.createElement("div");
+	div.className = "warning";
+	div.innerHTML = "⚠️ Trình duyệt không hỗ trợ định vị.";
+	document.body.appendChild(div);
 }
 
 const sheetId = "175hcG79IKLznuzW06-LGlHbbEZYtjiec3DfYeyeCEyU";
